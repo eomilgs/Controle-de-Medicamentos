@@ -71,14 +71,44 @@ public class Main {
     }
 
     private static void cadastrarMedicamento() {
-        repositorio.cadastrar(lerMedicamento());
-        System.out.println("Medicamento cadastrado.");
+        System.out.println("\n--- DADOS DO MEDICAMENTO ---");
+        Medicamento medicamento = lerMedicamento();
+        String categoria = lerTexto("Categoria (ex.: analgésico): ");
+        System.out.println("\n--- DADOS DO LOTE ---");
+        String codigoLote = lerTexto("Código do lote: ");
+        String validade = lerTexto("Validade (ex.: 12/2027): ");
+        int quantidade = lerInteiroPositivo("Quantidade em estoque: ");
+        System.out.println("\n--- LOCAL DE ARMAZENAMENTO ---");
+        String farmacia = lerTexto("Nome da farmácia: ");
+        String endereco = lerTexto("Endereço da farmácia: ");
+        repositorio.cadastrarCompleto(medicamento, categoria, codigoLote, validade,
+                quantidade, farmacia, endereco);
+        System.out.println("\nCadastro concluído! Medicamento, categoria, fabricante, lote e farmácia foram ligados automaticamente no grafo.");
+        System.out.println("Escolha a opção 5 para visualizar todas as informações e relações.");
     }
 
     private static void atualizarMedicamento() {
+        System.out.println("\n--- ATUALIZAR MEDICAMENTO E TODAS AS RELAÇÕES ---");
         String rid = lerTexto("@rid do medicamento (consulte a opção 1): ");
-        boolean atualizado = repositorio.atualizar(rid, lerMedicamento());
-        System.out.println(atualizado ? "Medicamento atualizado." : "Não encontrei esse medicamento.");
+
+        System.out.println("\n--- DADOS DO MEDICAMENTO ---");
+        Medicamento medicamento = lerMedicamento();
+        String categoria = lerTexto("Categoria: ");
+
+        System.out.println("\n--- DADOS DO LOTE ---");
+        String codigoLote = lerTexto("Código do lote: ");
+        String validade = lerTexto("Validade (ex.: 12/2027): ");
+        int quantidade = lerInteiroPositivo("Quantidade em estoque: ");
+
+        System.out.println("\n--- LOCAL DE ARMAZENAMENTO ---");
+        String farmacia = lerTexto("Nome da farmácia: ");
+        String endereco = lerTexto("Endereço da farmácia: ");
+
+        boolean atualizado = repositorio.atualizarCompleto(rid, medicamento, categoria,
+                codigoLote, validade, quantidade, farmacia, endereco);
+        System.out.println(atualizado
+                ? "Medicamento, lote, categoria, fabricante e farmácia atualizados com sucesso!"
+                : "Não encontrei medicamento com esse @rid.");
     }
 
     private static void excluirMedicamento() {
@@ -151,6 +181,14 @@ public class Main {
             return Integer.parseInt(lerTexto(mensagem));
         } catch (NumberFormatException erro) {
             return -1;
+        }
+    }
+
+    private static int lerInteiroPositivo(String mensagem) {
+        while (true) {
+            int valor = lerInteiro(mensagem);
+            if (valor > 0) return valor;
+            System.out.println("Digite uma quantidade inteira maior que zero.");
         }
     }
 
